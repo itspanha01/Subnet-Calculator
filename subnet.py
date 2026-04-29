@@ -1,3 +1,19 @@
+import os
+from rich.console import Console
+from rich.rule import Rule
+from rich.panel import Panel
+from rich.tree import Tree
+from rich.text import Text
+
+console = Console()
+
+os.system('cls')
+print("""
+▄█████ ▄▄ ▄▄ ▄▄▄▄  ▄▄  ▄▄ ▄▄▄▄▄ ▄▄▄▄▄▄ 
+▀▀▀▄▄▄ ██ ██ ██▄██ ███▄██ ██▄▄    ██   
+█████▀ ▀███▀ ██▄█▀ ██ ▀██ ██▄▄▄   ██    v1.0  
+""")
+
 def create_decimal(list):
     decimal_list = []
     for i in list:
@@ -6,19 +22,12 @@ def create_decimal(list):
     joined = ".".join([str(x) for x in decimal_list])
     return joined
 
-def create_string(list):
-    decimal_list = []
-    for i in list:
-        decimal = int(i, 2)
-        decimal_list.append(decimal)
-    joined = ".".join([str(x) for x in decimal_list])
-    return joined
-
+# IP input
 oct_count = 1
 ip = []
 ip_bin = []
 while oct_count < 5:
-    octet = int(input(f"{oct_count} octet: "))
+    octet = int(input(f"Enter octet {oct_count}: "))
     if octet < 255:
         ip.append(octet)
         octet = format(octet, '08b')
@@ -30,12 +39,10 @@ while oct_count < 5:
 show_ip = f'{ip[0]}.{ip[1]}.{ip[2]}.{ip[3]}'
 show_ip_bin = f'{ip_bin[0]}.{ip_bin[1]}.{ip_bin[2]}.{ip_bin[3]}'
 
-print(f'IP address: {show_ip} or {show_ip_bin}')
-
 network_bits = int(input("Enter subnet mask [24, 1, 2...]: /"))
 host_bits = 32 - network_bits
-print(f'Network bits: {network_bits}')
-print(f'Host bits: {host_bits}')
+total_hosts = 2**(host_bits)
+usable_hosts = total_hosts - 2
 
 mask_list = []
 decimal_list = []
@@ -50,9 +57,6 @@ for i in range(0, 32, 8):
 # Turns all the strings into dot format
 mask_ip_form = ".".join([f"{x:08}" for x in mask_list])
 mask_ip_decimal = ".".join([str(x) for x in decimal_list])
-full_mask_bin = ".".join([str(x) for x in full_list])
-
-print(f'{mask_ip_form} or {mask_ip_decimal}')
 
 starting_ip = []
 ending_ip = []
@@ -71,17 +75,39 @@ for i in range(4):
         if mask_bits == "1": # if it's one, the ip stays the same
             ending += ip_bits
         else:
-            ending += "1" # if a zero, then 
+            ending += "1" # if a zero, then change that 0 into a 1
     starting_ip.append(starting)
     ending_ip.append(ending)
 
+usable_start = starting_ip[:]
+usable_end = ending_ip[:]
+added_bit = int(usable_start[3], 2) + 1
+usable_start[3] = format(added_bit, '08b')
+removed_bit = int(usable_end[3], 2) - 1
+usable_end[3] = format(removed_bit, '08b')
+
 decimal_starting = create_decimal(starting_ip)
 decimal_ending = create_decimal(ending_ip)
+usable_start_ip = create_decimal(usable_start)
+usable_end_ip = create_decimal(usable_end)
 joined_starting_ip = ".".join([str(x) for x in starting_ip])
 joined_ending_ip = ".".join([str(x) for x in ending_ip])
+joined_usable_start = ".".join([str(x) for x in usable_start])
+joined_usable_end= ".".join([str(x) for x in usable_end])
 
-print(f'your IP: {show_ip}')
-print(f'starting IP: {joined_starting_ip} or {decimal_starting}')
-print(f'ending IP: {joined_ending_ip} or {decimal_ending}')
+def display_output():
+    summary = Text.assemble(                      
+        ("Target IP: ", "bold green"), (f"{show_ip}/{network_bits}\n", "bold white"),
+        ("Subnet Mask: ", "bold green"), (f"{mask_ip_decimal}\n", "bold white"),
+        ("Network bits: ", "bold green"), (f"{network_bits}\n", "bold white"),
+        ("Host bits: ", "bold green"), (f"{host_bits}\n", "bold white"),
+        ("Total hosts: ", "bold green"), (f"{total_hosts}\n", "bold white"),
+        ("Usable hosts: ", "bold green"), (f"{usable_hosts}\n", "bold white"),
+        ("Network Address: ", "bold green"), (f"{decimal_starting}\n", "bold white"),
+        ("Broadcast Address: ", "bold green"), (f"{decimal_ending}\n", "bold white"),
+        ("Usable Range: ", "bold green"), (f"{usable_start_ip} — {usable_end_ip}", "bold yellow")
+    )
+    console.print(Panel(summary, border_style="dim", padding=(1, 2)))
 
-# Fix the usable IP address
+# run the app
+display_output()
