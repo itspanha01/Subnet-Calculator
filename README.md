@@ -1,2 +1,4 @@
 # Subnet-Calculator
-Custom subnet Calculator
+Calculate subnets in just seconds!
+
+![alt text](image.png)

@@ -97,17 +97,17 @@ joined_usable_end= ".".join([str(x) for x in usable_end])
 
 def display_output():
     summary = Text.assemble(                      
-        ("Target IP: ", "bold green"), (f"{show_ip}/{network_bits}\n", "bold white"),
-        ("Subnet Mask: ", "bold green"), (f"{mask_ip_decimal}\n", "bold white"),
-        ("Network bits: ", "bold green"), (f"{network_bits}\n", "bold white"),
-        ("Host bits: ", "bold green"), (f"{host_bits}\n", "bold white"),
-        ("Total hosts: ", "bold green"), (f"{total_hosts}\n", "bold white"),
-        ("Usable hosts: ", "bold green"), (f"{usable_hosts}\n", "bold white"),
-        ("Network Address: ", "bold green"), (f"{decimal_starting}\n", "bold white"),
-        ("Broadcast Address: ", "bold green"), (f"{decimal_ending}\n", "bold white"),
-        ("Usable Range: ", "bold green"), (f"{usable_start_ip} — {usable_end_ip}", "bold yellow")
+        ("Target IP: ", "bold #39e600"), (f"{show_ip}/{network_bits}\n", "bold white"),
+        ("Subnet Mask: ", "bold #39e600"), (f"{mask_ip_decimal}\n", "bold white"),
+        ("Network bits: ", "bold #39e600"), (f"{network_bits}\n", "bold white"),
+        ("Host bits: ", "bold #39e600"), (f"{host_bits}\n", "bold white"),
+        ("Total hosts: ", "bold #39e600"), (f"{total_hosts}\n", "bold white"),
+        ("Usable hosts: ", "bold #39e600"), (f"{usable_hosts}\n", "bold white"),
+        ("Network Address: ", "bold #39e600"), (f"{decimal_starting}\n", "bold white"),
+        ("Broadcast Address: ", "bold #39e600"), (f"{decimal_ending}\n", "bold white"),
+        ("Usable Range: ", "bold #39e600"), (f"{usable_start_ip} — {usable_end_ip}", "bold yellow")
     )
     console.print(Panel(summary, border_style="dim", padding=(1, 2)))
-
+    os.system('pause')
 # run the app
 display_output()
