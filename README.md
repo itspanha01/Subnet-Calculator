@@ -1,4 +1,3 @@
-# Subnet-Calculator
-Calculate subnets in just seconds!
+Quick and easy subnet calculator right in terminal
 
 ![alt text](image.png)
