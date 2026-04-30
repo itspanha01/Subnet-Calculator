@@ -1,7 +1,7 @@
 # Subnet Calculator
 A Quick and easy subnet calculator right in the terminal.
 
-# Requirments
+# Requirements
 ![preview](./preview.png)
 
 Runs in any terminal using python.
