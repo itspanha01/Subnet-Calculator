@@ -8,11 +8,17 @@ from rich.text import Text
 console = Console()
 
 os.system('cls')
-print("""
+
+title = """
 ▄█████ ▄▄ ▄▄ ▄▄▄▄  ▄▄  ▄▄ ▄▄▄▄▄ ▄▄▄▄▄▄ 
 ▀▀▀▄▄▄ ██ ██ ██▄██ ███▄██ ██▄▄    ██   
-█████▀ ▀███▀ ██▄█▀ ██ ▀██ ██▄▄▄   ██    v1.0  
-""")
+█████▀ ▀███▀ ██▄█▀ ██ ▀██ ██▄▄▄   ██    v1.1
+
+Subnet mask calculator in the terminal.
+Github Repo: https://github.com/itspanha01/Subnet-Calculator
+"""
+
+print(title)
 
 def create_decimal(list):
     decimal_list = []
@@ -24,20 +30,35 @@ def create_decimal(list):
 
 # IP input
 oct_count = 1
-ip = []
-ip_bin = []
-while oct_count < 5:
-    octet = int(input(f"Enter octet {oct_count}: "))
-    if octet < 255:
-        ip.append(octet)
-        octet = format(octet, '08b')
-        ip_bin.append(octet)
-        oct_count += 1
-    else:
-        print("Octets can't be above 255. Please try again!")
 
-show_ip = f'{ip[0]}.{ip[1]}.{ip[2]}.{ip[3]}'
-show_ip_bin = f'{ip_bin[0]}.{ip_bin[1]}.{ip_bin[2]}.{ip_bin[3]}'
+while True:
+    ip = []
+    ip_bin = []
+    is_valid = True
+
+    Enter_full_ip = input("Enter IP address: ")
+    Enter_full_ip = Enter_full_ip.split('.')
+
+    if len(Enter_full_ip) != 4:
+        print("Please enter 4 octets.")
+        is_valid = False
+    else:
+        for octet in Enter_full_ip:
+            try:
+                octet = int(octet)
+                if 0 <= octet <= 255:
+                    ip.append(octet)
+                    octet_bin = format(octet, '08b')
+                    ip_bin.append(octet_bin)
+                else:
+                    print(f"Invalid IP. {octet} can't be above 255, Please try again!")
+                    is_valid = False
+                    break
+            except ValueError:
+                print("Invalid.")
+                break
+    if is_valid:
+        break
 
 network_bits = int(input("Enter subnet mask [24, 1, 2...]: /"))
 host_bits = 32 - network_bits
@@ -48,6 +69,7 @@ mask_list = []
 decimal_list = []
 
 bit_form = "1" * network_bits + "0" * host_bits
+
 for i in range(0, 32, 8):
     decimal = int(bit_form[i:i+8], 2)
     decimal_list.append(decimal)
@@ -57,6 +79,8 @@ for i in range(0, 32, 8):
 # Turns all the strings into dot format
 mask_ip_form = ".".join([f"{x:08}" for x in mask_list])
 mask_ip_decimal = ".".join([str(x) for x in decimal_list])
+show_ip = ".".join([str(x) for x in ip])
+show_ip_bin = ".".join([str(x) for x in ip_bin])
 
 starting_ip = []
 ending_ip = []
@@ -79,6 +103,7 @@ for i in range(4):
     starting_ip.append(starting)
     ending_ip.append(ending)
 
+# Create usable starting and ending IP addresses
 usable_start = starting_ip[:]
 usable_end = ending_ip[:]
 added_bit = int(usable_start[3], 2) + 1
@@ -96,8 +121,10 @@ joined_usable_start = ".".join([str(x) for x in usable_start])
 joined_usable_end= ".".join([str(x) for x in usable_end])
 
 def display_output():
+    os.system('cls')
+    print(title)
     summary = Text.assemble(                      
-        ("Target IP: ", "bold #39e600"), (f"{show_ip}/{network_bits}\n", "bold white"),
+        ("Target IP: ", "bold #39e600"), (f"{show_ip}/{network_bits}\n\n", "bold white"),
         ("Subnet Mask: ", "bold #39e600"), (f"{mask_ip_decimal}\n", "bold white"),
         ("Network bits: ", "bold #39e600"), (f"{network_bits}\n", "bold white"),
         ("Host bits: ", "bold #39e600"), (f"{host_bits}\n", "bold white"),
@@ -109,5 +136,6 @@ def display_output():
     )
     console.print(Panel(summary, border_style="dim", padding=(1, 2)))
     os.system('pause')
+
 # run the app
 display_output()
