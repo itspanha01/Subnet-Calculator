@@ -20,6 +20,7 @@ Github Repo: https://github.com/itspanha01/Subnet-Calculator
 
 print(title)
 
+# Create a Decimal list
 def create_decimal(list):
     decimal_list = []
     for i in list:
@@ -28,9 +29,7 @@ def create_decimal(list):
     joined = ".".join([str(x) for x in decimal_list])
     return joined
 
-# IP input
-oct_count = 1
-
+# IP address input
 while True:
     ip = []
     ip_bin = []
@@ -60,6 +59,7 @@ while True:
     if is_valid:
         break
 
+# Input subnet mask
 network_bits = int(input("Enter subnet mask [24, 1, 2...]: /"))
 host_bits = 32 - network_bits
 total_hosts = 2**(host_bits)
